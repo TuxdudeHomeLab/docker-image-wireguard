@@ -2,9 +2,9 @@
 set -e -o pipefail
 
 cleanup() {
-    echo "Bringing down wireguard client interface ${INTERFACE_NAME:?}"
+    echo "Bringing down wireguard client interface ${wg_interface_name:?}"
     echo
-    wg-quick down ${WIREGUARD_CONFIG:?}
+    wg-quick down ${wg_config:?}
     # Exit with a non-zero code to allow the docker restart policy to kick in.
     exit 1
 }
@@ -60,16 +60,20 @@ invoke_post_launch_hook() {
 start_wireguard() {
     invoke_pre_launch_hook
 
-    echo "Bringing up wireguard client interface ${INTERFACE_NAME:?} with config ${WIREGUARD_CONFIG:?}"
+    echo "Copying '${WIREGUARD_CONFIG:?}' as '${wg_config:?}'"
     echo
-    wg-quick up ${WIREGUARD_CONFIG:?}
+    cp "${WIREGUARD_CONFIG:?}" "${wg_config:?}"
+
+    echo "Bringing up wireguard client interface ${wg_interface_name:?} with config ${WIREGUARD_CONFIG:?}"
+    echo
+    wg-quick up ${wg_config:?}
 
     trap cleanup SIGTERM SIGINT SIGQUIT
 
     invoke_post_launch_hook
 
     echo
-    echo "Wireguard client interface ${INTERFACE_NAME:?} is up for the VPN tunnel"
+    echo "Wireguard client interface ${wg_interface_name:?} is up for the VPN tunnel"
     echo
 
     sleep infinity &
@@ -77,11 +81,12 @@ start_wireguard() {
 }
 
 interface_name() {
-    local config_file_name="$(basename ${WIREGUARD_CONFIG:?})"
+    local config_file_name="$(basename ${1:?})"
     echo "${config_file_name%.conf}"
 }
 
 validate
-INTERFACE_NAME=$(interface_name)
+wg_config="/etc/wg0.conf"
+wg_interface_name=$(interface_name ${wg_config:?})
 
 start_wireguard
