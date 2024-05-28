@@ -23,7 +23,7 @@ WORKDIR /root/wg-build
 RUN \
     set -e -o pipefail \
     # Download wireguard-tools repo. \
-    && git clone --quiet --depth 1 --branch v${WIREGUARD_VERSION:?} https://git.zx2c4.com/wireguard-tools \
+    && git clone --quiet --depth 1 --branch ${WIREGUARD_VERSION:?} https://git.zx2c4.com/wireguard-tools \
     # Build the wireguard tools. \
     && make -C wireguard-tools/src -j$(nproc) \
     # Copy the built binaries/scripts. \
