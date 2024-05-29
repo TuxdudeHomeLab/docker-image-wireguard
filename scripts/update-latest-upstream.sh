@@ -23,7 +23,7 @@ git_repo_latest_tag() {
     # Strip out any strings that begin with 'v' before identifying the highest semantic version.
     highest_sem_ver_tag=$(git_repo_get_all_tags ${git_repo:?} | sed -E s'#^v(.*)$#\1#g' | sed '/-/!{s/$/_/}' | sort --version-sort | sed 's/_$//'| tail -1)
     # Identify the correct tag for the semantic version of interest.
-    git_repo_get_all_tags ${git_repo:?} | grep "${highest_sem_ver_tag:?}$" | cut --delimiter='/' --fields=3
+    git_repo_get_all_tags ${git_repo:?} | grep -E "${highest_sem_ver_tag//./\\.}$" | cut --delimiter='/' --fields=3
 }
 
 get_config_arg() {
@@ -39,14 +39,16 @@ set_config_arg() {
 
 pkg="wireguard-tools"
 repo_url="https://git.zx2c4.com/wireguard-tools"
-config_key="WIREGUARD_VERSION"
+config_ver_key="WIREGUARD_VERSION"
 
-existing_upstream_ver=$(get_config_arg ${config_key:?})
+existing_upstream_ver=$(get_config_arg ${config_ver_key:?})
 latest_upstream_ver=$(git_repo_latest_tag ${repo_url:?})
 
 if [[ "${existing_upstream_ver:?}" == "${latest_upstream_ver:?}" ]]; then
     echo "Existing config is already up to date and pointing to the latest upstream ${pkg:?} version '${latest_upstream_ver:?}'"
 else
-    echo "Updating ${pkg:?} ${config_key:?} '${existing_upstream_ver:?}' -> '${latest_upstream_ver:?}'"
-    set_config_arg "${config_key:?}" "${latest_upstream_ver:?}"
+    echo "Updating ${pkg:?} ${config_ver_key:?} '${existing_upstream_ver:?}' -> '${latest_upstream_ver:?}'"
+    set_config_arg "${config_ver_key:?}" "${latest_upstream_ver:?}"
+    git add ${ARGS_FILE:?}
+    git commit -m "feat: Bump upstream ${pkg:?} version to ${latest_upstream_ver:?}."
 fi
