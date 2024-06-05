@@ -4,3 +4,10 @@ set -e -o pipefail
 # Add repo specific metadata here.
 
 UPSTREAM_IMAGE_CONFIG_KEY_PREFIX="BASE_IMAGE"
+TEST_TYPE="foreground"
+TEST_CONTAINER_TYPE="wireguard"
+
+test_start_container() {
+    local container_name="${1:?}"
+    # TODO: Add testing logic here.
+}
