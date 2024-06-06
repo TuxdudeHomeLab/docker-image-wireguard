@@ -6,7 +6,7 @@ set -e -o pipefail
 PACKAGE_NAME="wireguard-tools"
 RELEASE_PACKAGE_NAME="wireguard-tools"
 RELEASE_TAG_PACKAGE_NAME="wireguard-tools"
-UPSTREAM_IMAGE_CONFIG_KEY_PREFIX="BASE_IMAGE"
+BASE_IMAGE_CONFIG_KEY_PREFIX="BASE_IMAGE"
 UPSTREAM_VERSION_CONFIG_KEY="WIREGUARD_VERSION"
 UPSTREAM_GIT_REPO="https://git.zx2c4.com/wireguard-tools"
 TEST_TYPE="foreground"
@@ -17,7 +17,7 @@ current_upstream_version() {
 }
 
 latest_upstream_version() {
-    git_repo_latest_tag "${UPSTREAM_GIT_REPO:?}"
+    git_remote_repo_latest_tag "${UPSTREAM_GIT_REPO:?}"
 }
 
 update_latest_upstream_version() {
