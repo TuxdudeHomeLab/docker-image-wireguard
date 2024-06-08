@@ -3,12 +3,15 @@ set -e -o pipefail
 
 # Add repo specific metadata here.
 
-PACKAGE_NAME="wireguard-tools"
-RELEASE_PACKAGE_NAME="wireguard-tools"
-RELEASE_TAG_PACKAGE_NAME="wireguard-tools"
 BASE_IMAGE_CONFIG_KEY_PREFIX="BASE_IMAGE"
+
+UPSTREAM_PACKAGE_NAME="wireguard-tools"
 UPSTREAM_VERSION_CONFIG_KEY="WIREGUARD_VERSION"
 UPSTREAM_GIT_REPO="https://git.zx2c4.com/wireguard-tools"
+
+RELEASE_PACKAGE_NAME="wireguard-tools"
+RELEASE_TAG_PACKAGE_NAME="wireguard-tools"
+
 TEST_TYPE="background"
 TEST_CONTAINER_TYPE="wireguard"
 TEST_CONTAINER_START_WAIT_SECONDS="10"
