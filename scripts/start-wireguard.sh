@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e -o pipefail
+set -E -e -o pipefail
 
 cleanup() {
     echo "Bringing down wireguard client interface ${wg_interface_name:?}"

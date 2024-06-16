@@ -12,7 +12,7 @@ COPY scripts/start-wireguard.sh /scripts/
 COPY patches /patches
 
 RUN \
-    set -e -o pipefail \
+    set -E -e -o pipefail \
     && homelab install util-linux \
     && homelab install build-essential git \
     && mkdir -p /root/wg-build
@@ -21,7 +21,7 @@ WORKDIR /root/wg-build
 
 # hadolint ignore=SC2046
 RUN \
-    set -e -o pipefail \
+    set -E -e -o pipefail \
     # Download wireguard-tools repo. \
     && git clone --quiet --depth 1 --branch ${WIREGUARD_VERSION:?} https://git.zx2c4.com/wireguard-tools \
     # Build the wireguard tools. \
@@ -44,7 +44,7 @@ RUN \
     --mount=type=bind,target=/scripts,from=builder,source=/scripts \
     --mount=type=bind,target=/patches,from=builder,source=/patches \
     --mount=type=bind,target=/wg-build,from=builder,source=/wg-build \
-    set -e -o pipefail \
+    set -E -e -o pipefail \
     # Install dependencies. \
     && homelab install util-linux patch ${PACKAGES_TO_INSTALL:?} \
     # Install wireguard. \
