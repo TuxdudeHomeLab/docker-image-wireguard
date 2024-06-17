@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -E -e -o pipefail
 
+wg_config="/etc/wg0.conf"
+
 set_umask() {
     # Configure umask to allow write permissions for the group by default
     # in addition to the owner.
@@ -39,6 +41,8 @@ validate() {
     fi
     echo "Detected default route ${default_route:?}"
     echo
+
+    wg_interface_name=$(interface_name ${wg_config:?})
 }
 
 invoke_pre_launch_hook() {
@@ -91,9 +95,6 @@ interface_name() {
     echo "${config_file_name%.conf}"
 }
 
-validate
-wg_config="/etc/wg0.conf"
-wg_interface_name=$(interface_name ${wg_config:?})
-
 set_umask
+validate
 start_wireguard
