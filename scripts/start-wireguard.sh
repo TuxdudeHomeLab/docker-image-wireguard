@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -E -e -o pipefail
 
+set_umask() {
+    # Configure umask to allow write permissions for the group by default
+    # in addition to the owner.
+    umask 0002
+}
+
 cleanup() {
     echo "Bringing down wireguard client interface ${wg_interface_name:?}"
     echo
@@ -89,4 +95,5 @@ validate
 wg_config="/etc/wg0.conf"
 wg_interface_name=$(interface_name ${wg_config:?})
 
+set_umask
 start_wireguard
