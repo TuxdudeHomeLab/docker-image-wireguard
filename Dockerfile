@@ -60,3 +60,4 @@ RUN \
     && homelab cleanup
 
 CMD ["start-wireguard"]
+STOPSIGNAL SIGTERM
