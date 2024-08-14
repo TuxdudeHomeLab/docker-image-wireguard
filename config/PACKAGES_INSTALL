@@ -1,2 +1,3 @@
 iptables=1.8.9-2
+netcat-openbsd=1.219-1
 openresolv=3.12.0-3
