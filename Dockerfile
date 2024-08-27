@@ -13,6 +13,7 @@ COPY patches /patches
 
 RUN \
     set -E -e -o pipefail \
+    && export HOMELAB_VERBOSE=y \
     && homelab install util-linux \
     && homelab install build-essential git \
     && mkdir -p /root/wg-build
@@ -45,6 +46,7 @@ RUN \
     --mount=type=bind,target=/patches,from=builder,source=/patches \
     --mount=type=bind,target=/wg-build,from=builder,source=/wg-build \
     set -E -e -o pipefail \
+    && export HOMELAB_VERBOSE=y \
     # Install dependencies. \
     && homelab install util-linux patch ${PACKAGES_TO_INSTALL:?} \
     # Install wireguard. \
