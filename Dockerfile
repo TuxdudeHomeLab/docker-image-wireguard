@@ -11,26 +11,23 @@ SHELL ["/bin/bash", "-c"]
 COPY scripts/start-wireguard.sh /scripts/
 COPY patches /patches
 
+# hadolint ignore=SC2046
 RUN \
     set -E -e -o pipefail \
     && export HOMELAB_VERBOSE=y \
     && homelab install util-linux \
     && homelab install build-essential git \
-    && mkdir -p /root/wg-build
-
-WORKDIR /root/wg-build
-
-# hadolint ignore=SC2046
-RUN \
-    set -E -e -o pipefail \
     # Download wireguard-tools repo. \
-    && git clone --quiet --depth 1 --branch ${WIREGUARD_VERSION:?} https://git.zx2c4.com/wireguard-tools \
+    && homelab download-git-repo \
+        https://git.zx2c4.com/wireguard-tools \
+        ${WIREGUARD_VERSION:?} \
+        /root/wireguard-tools \
     # Build the wireguard tools. \
-    && make -C wireguard-tools/src -j$(nproc) \
+    && make -C /root/wireguard-tools/src -j$(nproc) \
     # Copy the built binaries/scripts. \
     && mkdir -p /wg-build \
-    && cp wireguard-tools/src/wg /wg-build \
-    && cp wireguard-tools/src/wg-quick/linux.bash /wg-build/wg-quick
+    && cp /root/wireguard-tools/src/wg /wg-build \
+    && cp /root/wireguard-tools/src/wg-quick/linux.bash /wg-build/wg-quick
 
 ARG BASE_IMAGE_NAME
 ARG BASE_IMAGE_TAG
