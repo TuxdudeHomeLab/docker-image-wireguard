@@ -6,8 +6,6 @@ FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS builder
 
 ARG WIREGUARD_VERSION
 
-SHELL ["/bin/bash", "-c"]
-
 COPY scripts/start-wireguard.sh /scripts/
 COPY patches /patches
 
@@ -32,8 +30,6 @@ RUN \
 ARG BASE_IMAGE_NAME
 ARG BASE_IMAGE_TAG
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}
-
-SHELL ["/bin/bash", "-c"]
 
 ARG PACKAGES_TO_INSTALL
 
